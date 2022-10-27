@@ -6,7 +6,7 @@
 To generate a new .hpi:
   - run `mvn install` in the terminal
   
-  - if you come across a Build Failure or compilation failure you may have to rebuild the project: Build -> Rebuild Project and then run `mvn install`.
+  - if you come across a Build Failure or compilation failure you may have to rebuild the project: Build -> Rebuild Project and then run `mvn install -DskipTests` to skip running tests.
   
        <img width="1395" alt="Screen Shot 2022-10-27 at 11 31 31 AM" src="https://user-images.githubusercontent.com/112515811/198342917-e0956d14-55e4-4af1-816f-3f5a26cdef8a.png">
 
