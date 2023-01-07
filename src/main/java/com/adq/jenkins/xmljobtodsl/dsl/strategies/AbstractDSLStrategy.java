@@ -111,16 +111,20 @@ public abstract class AbstractDSLStrategy implements DSLStrategy {
 	}
 
 	protected Pair<String, String> getProperty(PropertyDescriptor propertyDescriptor) {
+		String propertyName = propertyDescriptor.getName();
+
+		if(propertyDescriptor.getName().equals("type")){
+			propertyName = "type_child";
+		}
 		if (propertyDescriptor.getParent() != null) {
-			Pair<String, String> property = getPropertyByItsParentName(propertyDescriptor.getParent(), propertyDescriptor.getName());
+			Pair<String, String> property = getPropertyByItsParentName(propertyDescriptor.getParent(), propertyName);
 			if (property != null && property.getValue() != null) {
 				return property;
 			}
 		}
 
-		String key = propertyDescriptor.getName();
-		String property = translatorProperties.getProperty(key);
-		return new Pair(key, property);
+		String property = translatorProperties.getProperty(propertyName);
+		return new Pair(propertyName, property);
 	}
 
 	protected Pair<String, String> getPropertyByItsParentName(PropertyDescriptor parent, String concatenedParents) {
