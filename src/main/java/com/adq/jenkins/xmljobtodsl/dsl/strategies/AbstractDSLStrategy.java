@@ -49,8 +49,6 @@ public abstract class AbstractDSLStrategy implements DSLStrategy {
 		propertiesToBeSkipped.add("externalDelete");
 		propertiesToBeSkipped.add("skipWhenFailed");
 		propertiesToBeSkipped.add("notFailBuild");
-		propertiesToBeSkipped.add("browser");
-		propertiesToBeSkipped.add("hudson.plugins.git.extensions.impl.PathRestriction");
 		propertiesToBeSkipped.add("unstableReturn");
 		propertiesToBeSkipped.add("ignoreMissing");
 		propertiesToBeSkipped.add("ordinal");
