@@ -42,7 +42,6 @@ public abstract class AbstractDSLStrategy implements DSLStrategy {
 		propertiesToBeSkipped.add("submoduleCfg");
 		propertiesToBeSkipped.add("doGenerateSubmoduleConfigurations");
 		propertiesToBeSkipped.add("canRoam");
-		propertiesToBeSkipped.add("operationList");
 		propertiesToBeSkipped.add("caseSensitive");
 		propertiesToBeSkipped.add("followSymlinks");
 		propertiesToBeSkipped.add("completeBuild");
