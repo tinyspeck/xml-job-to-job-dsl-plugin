@@ -29,6 +29,7 @@ public class DSLParamStrategy extends DSLMethodStrategy {
 			for (PropertyDescriptor child : children ) {
 				if (child.getName().equals("defaultValue")) {
 					defaultValue = getChildrenByName("defaultValue").toDSL();
+
 				}
 			}
 			String name = getChildrenByName("name").toDSL();
