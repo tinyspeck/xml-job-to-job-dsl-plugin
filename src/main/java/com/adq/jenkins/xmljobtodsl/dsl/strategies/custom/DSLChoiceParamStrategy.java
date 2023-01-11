@@ -27,9 +27,8 @@ public class DSLChoiceParamStrategy extends DSLMethodStrategy {
 
 		List<PropertyDescriptor> children = propertyDescriptor.getProperties();
 		for (PropertyDescriptor child : children ) {
-			if (child.getName().equals("defaultValue")) {
+			if (child.getName().equals("description")) {
 				description = getChildrenByName("description").toDSL();
-
 			}
 		}
 		String choices = getChildrenByName("choices").toDSL();

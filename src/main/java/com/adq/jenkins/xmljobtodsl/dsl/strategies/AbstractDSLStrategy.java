@@ -55,7 +55,6 @@ public abstract class AbstractDSLStrategy implements DSLStrategy {
 		propertiesToBeSkipped.add("color");
 		propertiesToBeSkipped.add("activeProcessNames");
 		propertiesToBeSkipped.add("isVisible");
-//		propertiesToBeSkipped.add("trim");
 		propertiesToBeSkipped.add("disableDeferredWipeout");
 		propertiesToBeSkipped.add("shallow");
 		propertiesToBeSkipped.add("skipPublishingChecks");
@@ -245,7 +244,6 @@ public abstract class AbstractDSLStrategy implements DSLStrategy {
 		if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
 			return value;
 		}
-
 		if (value.matches("-?[0-9.]+") && countChar('.', value) < 2) {
 			return value;
 		}

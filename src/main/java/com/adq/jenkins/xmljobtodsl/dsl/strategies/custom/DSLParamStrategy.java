@@ -24,16 +24,18 @@ public class DSLParamStrategy extends DSLMethodStrategy {
 	public String getOrderedChildrenDSL() {
 		PropertyDescriptor propertyDescriptor = (PropertyDescriptor) getDescriptor();
 		if (propertyDescriptor.getName().equals("hudson.model.StringParameterDefinition") || propertyDescriptor.getName().equals("hudson.model.BooleanParameterDefinition")) {
-			String defaultValue = "\"\"";
+			String defaultValue = "\"\"", description = "\"\"";
 			List <PropertyDescriptor> children = propertyDescriptor.getProperties();
 			for (PropertyDescriptor child : children ) {
 				if (child.getName().equals("defaultValue")) {
 					defaultValue = getChildrenByName("defaultValue").toDSL();
 
 				}
+				if (child.getName().equals("description")) {
+					description = getChildrenByName("description").toDSL();
+				}
 			}
 			String name = getChildrenByName("name").toDSL();
-			String description = getChildrenByName("description").toDSL();
 			return name + ", " + defaultValue + ", " + description;
 
 		} else {
