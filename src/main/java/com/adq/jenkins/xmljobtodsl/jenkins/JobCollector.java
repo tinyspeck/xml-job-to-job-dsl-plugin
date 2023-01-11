@@ -149,8 +149,7 @@ public class JobCollector {
 		builder.append("<a href=\"https://slack-pde.slack.com/archives/C040E161M2N\">#proj-xml-to-dsl-plugin-improvements</a>.<br />");
 		builder.append("General help and questions can go to ");
 		builder.append("<a href=\"https://slack-pde.slack.com/archives/C01LZDBKHHT\">#escal-build</a>.<br />");
-		builder.append("If you need some of them to be translated, please create an issue on our ");
-		builder.append("<a href=\"https://github.com/jenkinsci/xml-job-to-job-dsl-plugin\">GitHub</a>.<br />");
+		builder.append("<a href=\"https://github.com/tinyspeck/xml-job-to-job-dsl-plugin\">GitHub</a>.<br />");
 		return builder.toString();
 	}
 
