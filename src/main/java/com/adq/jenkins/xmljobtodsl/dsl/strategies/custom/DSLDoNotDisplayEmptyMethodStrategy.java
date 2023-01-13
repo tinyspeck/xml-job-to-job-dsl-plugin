@@ -24,6 +24,7 @@ public class DSLDoNotDisplayEmptyMethodStrategy extends DSLMethodStrategy {
     @Override
     public String toDSL() {
         PropertyDescriptor propertyDescriptor = (PropertyDescriptor) getDescriptor();
+
         if (propertyDescriptor.getValue() != null) {
 
             boolean isParentAMethod = propertyDescriptor.getParent() != null &&
@@ -36,10 +37,11 @@ public class DSLDoNotDisplayEmptyMethodStrategy extends DSLMethodStrategy {
             return replaceTabs(String.format(getSyntax("syntax.method_call"),
                     methodName, printValueAccordingOfItsType(propertyDescriptor.getValue())), getTabs());
 
-        } else if (propertyDescriptor.getValue() == null) {
+        } else if (propertyDescriptor.getProperties() != null) {
+            return replaceTabs(String.format(getSyntax("syntax.method_call"),
+                    methodName, getChildrenDSL()), getTabs());
+        } else {
             return "";
         }
-        return replaceTabs(String.format(getSyntax("syntax.method_call"),
-                methodName, getChildrenDSL()), getTabs());
     }
 }
