@@ -31,6 +31,7 @@ hudson.plugins.copyartifact.CopyArtifact.selector.parameterName = parameterName
 hudson.plugins.copyartifact.CopyArtifact.selector.parameterName.type = com.adq.jenkins.xmljobtodsl.dsl.strategies.custom.DSLEnclosedObjectStrategy
 parameterName.enclosing_tag = buildParameter
 parameterNameEnclosed = parameterName
+parameterNameEnclosed.type = METHOD
  */
 public class DSLEnclosedObjectStrategy extends DSLObjectStrategy {
     private final String name;
@@ -42,12 +43,24 @@ public class DSLEnclosedObjectStrategy extends DSLObjectStrategy {
         List<PropertyDescriptor> renamedChildren = new ArrayList<>();
         List<PropertyDescriptor> leftoverProperties = new ArrayList<>();
 
-        String enclosingTagName = getPropertyByName(String.format("%s.enclosing_tag", propertyDescriptor.getName()));
+        // Find the full name ie definition.script.enclosing_tag vs just script.enclosing_tag
+        String propertyName = String.format("%s.enclosing_tag", propertyDescriptor.getName());
+        String enclosingTagFullName = getPropertyByItsParentName(propertyDescriptor.getParent(), propertyName).getKey();
+        String enclosingTagName = getPropertyByName(enclosingTagFullName);
+
+        // If we don't find it by the full name, also check just the descriptor name
+        if(enclosingTagName == null){
+            enclosingTagName = getPropertyByName(String.format("%s.enclosing_tag", propertyDescriptor.getName()));
+        }
 
         // Rename the children, so we can give them a new type in translator.properties
         for(PropertyDescriptor child : children){
             // Make sure the enclosing tag of each sibling matches the current tag / exists
-            String childEnclosingTag = getPropertyByName(String.format("%s.enclosing_tag", child.getName()));
+            String childEnclosingTagFullName = getPropertyByItsParentName(child.getParent(), child.getName()).getKey();
+            String childEnclosingTag = getPropertyByName(String.format("%s.enclosing_tag", childEnclosingTagFullName));
+            if(childEnclosingTag == null){
+                childEnclosingTag = getPropertyByName(String.format("%s.enclosing_tag", child.getName()));
+            }
 
             if(childEnclosingTag != null && childEnclosingTag.equals(enclosingTagName)) {
                 PropertyDescriptor newChild = new PropertyDescriptor(
