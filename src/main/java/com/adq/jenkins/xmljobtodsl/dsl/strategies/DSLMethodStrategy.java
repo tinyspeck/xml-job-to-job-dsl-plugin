@@ -4,6 +4,8 @@ import com.adq.jenkins.xmljobtodsl.parsers.PropertyDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DSLMethodStrategy extends AbstractDSLStrategy {
 
@@ -34,13 +36,37 @@ public class DSLMethodStrategy extends AbstractDSLStrategy {
             if (isParentAMethod) {
                 return getStrategyForObject(propertyDescriptor).toDSL();
             }
+            if (propertyDescriptor.getParent().getName().equals("hudson.model.StringParameterDefinition") && propertyDescriptor.getName().equals("defaultValue")) {
 
+                return replaceTabs(String.format(getSyntax("syntax.method_call"),
+                        methodName, printIntAsString(propertyDescriptor.getValue())), getTabs());
+            }
             return replaceTabs(String.format(getSyntax("syntax.method_call"),
                     methodName, printValueAccordingOfItsType(propertyDescriptor.getValue())), getTabs());
         }
 
         return replaceTabs(String.format(getSyntax("syntax.method_call"),
                 methodName, getChildrenDSL()), getTabs());
+    }
+
+    public String printIntAsString(String value) {
+        if (value == null) {
+            return "\"\"";
+        }
+        if (value.isEmpty()) {
+            return "\"\"";
+        }
+
+        value = value.replaceAll("\\\\", "\\\\\\\\");
+        value = value.replaceAll("\\$", Matcher.quoteReplacement("\\$"));
+
+        if (value.contains("\n")) {
+            value = value.replaceAll(Pattern.quote("\"\"\""), Matcher.quoteReplacement("\\\"\\\"\\\""));
+            return "\"\"\"" + value + "\"\"\"";
+        } else {
+            value = value.replaceAll(Pattern.quote("\""), Matcher.quoteReplacement("\\\""));
+        }
+        return "\"" + value + "\"";
     }
 
     protected DSLStrategy getStrategyForObject(PropertyDescriptor propertyDescriptor) {
