@@ -19,16 +19,13 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
         this.name = name;
 
         List<PropertyDescriptor> children = propertyDescriptor.getProperties();
-        System.out.println(children);
-        List<PropertyDescriptor> renamedChildren = new ArrayList<>();
         PropertyDescriptor parent = propertyDescriptor.getParent();
-        System.out.println(parent);
 
         PropertyDescriptor typeChild = null;
         PropertyDescriptor patternChild = null;
         for (PropertyDescriptor child : children) {
             if (child.getName().equals("type")) {
-               typeChild = child;
+                typeChild = child;
             }
             if (child.getName().equals("pattern")) {
                 patternChild = child;
@@ -40,7 +37,7 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
                     parent.getParent(),
                     patternChild.getValue());
 
-           parent.addProperty(newChild);
+            parent.addProperty(newChild);
 
         } else if (typeChild.getValue().equals("EXCLUDE")) {
             PropertyDescriptor newChild = new PropertyDescriptor(String.format("excludePattern"),
@@ -49,36 +46,9 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
 
             parent.addProperty(newChild);
         }
-
-//
-//        PropertyDescriptor newChild = new PropertyDescriptor(
-//                String.format("syntax.method_call", typeChild),
-////                child.getParent(),
-//                propertyDescriptor.getParent(),
-//                typeChild.getValue(),
-//                typeChild.getProperties(),
-//                typeChild.getAttributes());
-//
-//        initChildren(newChild);
     }
-//
-//        List<PropertyDescriptor> patternDescriptors = new ArrayList<>();
-
-        // get the relevant children
-//        for (PropertyDescriptor child : children) {
-//           if (child.getName().equals("patterns")) {
-//               patternDescriptors.add(child);
-//           }
-//        }
-//
-//        PropertyDescriptor typeChild;
-//        for (PropertyDescriptor child : patternDescriptors) {
-////            PgetPropertyByName("type");
-//        }
-//    }
-    public String toDSL() {
+        public String toDSL() {
         String childrenDSL = getChildrenDSL();
-//        System.out.println(childrenDSL);
         if (!childrenDSL.isEmpty()) {
             return "";
         }
