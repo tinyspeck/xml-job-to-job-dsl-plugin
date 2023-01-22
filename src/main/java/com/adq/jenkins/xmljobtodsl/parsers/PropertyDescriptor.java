@@ -58,6 +58,11 @@ public class PropertyDescriptor implements IDescriptor {
         return name;
     }
 
+    public String changeName(String name){
+        this.name = name;
+        return this.name;
+    }
+
     public List<PropertyDescriptor> getProperties() {
         return properties;
     }
