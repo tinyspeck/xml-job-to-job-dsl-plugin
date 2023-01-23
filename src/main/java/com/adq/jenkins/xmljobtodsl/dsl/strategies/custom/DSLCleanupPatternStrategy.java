@@ -5,6 +5,30 @@ import com.adq.jenkins.xmljobtodsl.parsers.PropertyDescriptor;
 
 import java.util.List;
 
+/*
+Strategy for preBuildCleanup attribute, to correctly render includePattern and excludePattern, which is in the XML as:
+<hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.43">
+            <patterns>
+                <hudson.plugins.ws__cleanup.Pattern>
+                    <pattern>results/*</pattern>
+                    <type>INCLUDE</type>
+                </hudson.plugins.ws__cleanup.Pattern>
+            </patterns>
+            <deleteDirs>false</deleteDirs>
+            <cleanupParameter>test</cleanupParameter>
+        </hudson.plugins.ws__cleanup.PreBuildCleanup>
+
+ The value within type determines the method name: either "includePattern" or "excludePattern"
+ "pattern" is then inserted as the value for that method
+  Returns the dsl as:
+   preBuildCleanup {
+			includePattern("results/*")
+			deleteDirectories(false)
+			cleanupParameter("test")
+			deleteCommand("test")
+		}
+ */
+
 public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
 
     private final String name;
