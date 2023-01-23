@@ -32,20 +32,21 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
         }
 
         if (typeChild.getValue().equals("INCLUDE")) {
-            PropertyDescriptor newChild = new PropertyDescriptor(String.format("includePattern"),
+            PropertyDescriptor newChild = new PropertyDescriptor("includePattern",
                     parent.getParent(),
                     patternChild.getValue());
 
             parent.addProperty(newChild);
 
         } else if (typeChild.getValue().equals("EXCLUDE")) {
-            PropertyDescriptor newChild = new PropertyDescriptor(String.format("excludePattern"),
+            PropertyDescriptor newChild = new PropertyDescriptor("excludePattern",
                     parent.getParent(),
                     patternChild.getValue());
 
             parent.addProperty(newChild);
         }
     }
+
         public String toDSL() {
         String childrenDSL = getChildrenDSL();
         if (!childrenDSL.isEmpty()) {
