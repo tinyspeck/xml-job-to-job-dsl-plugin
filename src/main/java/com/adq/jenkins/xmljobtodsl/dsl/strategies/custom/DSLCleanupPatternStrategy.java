@@ -3,7 +3,6 @@ package com.adq.jenkins.xmljobtodsl.dsl.strategies.custom;
 import com.adq.jenkins.xmljobtodsl.dsl.strategies.DSLObjectStrategy;
 import com.adq.jenkins.xmljobtodsl.parsers.PropertyDescriptor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
@@ -31,7 +30,7 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
                 patternChild = child;
             }
         }
-//
+
         if (typeChild.getValue().equals("INCLUDE")) {
             PropertyDescriptor newChild = new PropertyDescriptor(String.format("includePattern"),
                     parent.getParent(),
