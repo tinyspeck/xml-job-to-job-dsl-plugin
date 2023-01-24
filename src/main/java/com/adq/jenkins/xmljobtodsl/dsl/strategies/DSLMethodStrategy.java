@@ -23,7 +23,7 @@ public class DSLMethodStrategy extends AbstractDSLStrategy {
         this(0, descriptor, null, true);
     }
 
-	@Override
+    @Override
     public String toDSL() {
         PropertyDescriptor propertyDescriptor = (PropertyDescriptor) getDescriptor();
         if (propertyDescriptor.getValue() != null) {
