@@ -1,28 +1,26 @@
 package com.adq.jenkins.xmljobtodsl.dsl.strategies.custom;
 
-import com.adq.jenkins.xmljobtodsl.dsl.strategies.DSLParameterStrategy;
+import com.adq.jenkins.xmljobtodsl.dsl.strategies.DSLMethodStrategy;
 import com.adq.jenkins.xmljobtodsl.parsers.PropertyDescriptor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DSLRenderChoiceParamsStrategy extends DSLParameterStrategy {
+public class DSLRenderDefaultValueAsStringStrategy extends DSLMethodStrategy {
 
-    private final String name;
+    private final String methodName;
 
-    public DSLRenderChoiceParamsStrategy(PropertyDescriptor propertyDescriptor) {
-        super(propertyDescriptor);
-        this.name = "";
-    }
-
-    public DSLRenderChoiceParamsStrategy(int tabs, PropertyDescriptor propertyDescriptor, String name) {
-        super(propertyDescriptor);
-        this.name = name;
+    public DSLRenderDefaultValueAsStringStrategy(int tabs, PropertyDescriptor propertyDescriptor, String methodName) {
+        super(tabs, propertyDescriptor, methodName);
+        this.methodName = methodName;
     }
 
     @Override
     public String toDSL() {
-        return printValueAccordingOfItsType(((PropertyDescriptor) getDescriptor()).getValue());
+        PropertyDescriptor propertyDescriptor = (PropertyDescriptor) getDescriptor();
+
+        return replaceTabs(String.format(getSyntax("syntax.method_call"),
+                methodName, printValueAccordingOfItsType(propertyDescriptor.getValue())), getTabs());
     }
 
     @Override
