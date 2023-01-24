@@ -36,11 +36,6 @@ public class DSLMethodStrategy extends AbstractDSLStrategy {
             if (isParentAMethod) {
                 return getStrategyForObject(propertyDescriptor).toDSL();
             }
-            if (propertyDescriptor.getParent().getName().equals("hudson.model.StringParameterDefinition") && propertyDescriptor.getName().equals("defaultValue")) {
-
-                return replaceTabs(String.format(getSyntax("syntax.method_call"),
-                        methodName, printIntAsString(propertyDescriptor.getValue())), getTabs());
-            }
             return replaceTabs(String.format(getSyntax("syntax.method_call"),
                     methodName, printValueAccordingOfItsType(propertyDescriptor.getValue())), getTabs());
         }
