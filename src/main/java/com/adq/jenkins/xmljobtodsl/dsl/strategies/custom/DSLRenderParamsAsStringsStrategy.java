@@ -44,9 +44,3 @@ public class DSLRenderParamsAsStringsStrategy extends DSLMethodStrategy {
         return "\"" + value + "\"";
     }
 }
-
-//        if (propertyDescriptor.getParent().getName().equals("hudson.model.StringParameterDefinition") && propertyDescriptor.getName().equals("defaultValue")
-//                || propertyDescriptor.getParent().getName().equals("a"))
-//        if (propertyDescriptor.getParent().getName().equals("a")) {
-//            return printValueAccordingOfItsType(((PropertyDescriptor) getDescriptor()).getValue());
-//        }
