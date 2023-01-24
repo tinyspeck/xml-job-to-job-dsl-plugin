@@ -1,8 +1,6 @@
 package com.adq.jenkins.xmljobtodsl.dsl.strategies.custom;
 
 import com.adq.jenkins.xmljobtodsl.dsl.strategies.DSLObjectStrategy;
-import com.adq.jenkins.xmljobtodsl.dsl.strategies.DSLStrategy;
-import com.adq.jenkins.xmljobtodsl.dsl.strategies.IValueStrategy;
 import com.adq.jenkins.xmljobtodsl.parsers.PropertyDescriptor;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class DSLHudsonNotificationPropertyStrategy extends DSLObjectStrategy {
     }
 
     private boolean determineOutdatedOrNoPluginVersion(PropertyDescriptor propertyDescriptor){
-        if(propertyDescriptor.getAttributes() == null){
+        if(propertyDescriptor.getAttributes() == null || propertyDescriptor.getAttributes().get("plugin") == null){
             return true;
         } else {
             // Assuming the plugin version looks like this: notification@1.15
@@ -47,7 +45,7 @@ public class DSLHudsonNotificationPropertyStrategy extends DSLObjectStrategy {
 
     private void castChildrenToLatestFormat(PropertyDescriptor propertyDescriptor){
         // Just grab all the bottom level grandchildren at once
-        List<PropertyDescriptor> children = findViableChildren(propertyDescriptor);
+        List<PropertyDescriptor> children = getAllDescendants(propertyDescriptor);
         for (PropertyDescriptor child : children) {
             if(child.getAttributes() != null && child.getAttributes().get("ChangedName") == "true"){
                 break;
@@ -76,7 +74,7 @@ public class DSLHudsonNotificationPropertyStrategy extends DSLObjectStrategy {
 
     }
 
-    private ArrayList<PropertyDescriptor> findViableChildren(PropertyDescriptor propertyDescriptor){
+    private ArrayList<PropertyDescriptor> getAllDescendants(PropertyDescriptor propertyDescriptor){
         ArrayList<PropertyDescriptor> viableChildren = new ArrayList<>();
         List<PropertyDescriptor> children = propertyDescriptor.getProperties();
 
@@ -84,7 +82,7 @@ public class DSLHudsonNotificationPropertyStrategy extends DSLObjectStrategy {
             if(child.getProperties() == null || child.getProperties().size() == 0){
                 viableChildren.add(child);
             } else {
-                viableChildren.addAll(findViableChildren(child));
+                viableChildren.addAll(getAllDescendants(child));
             }
         }
 
