@@ -8,16 +8,12 @@ import java.util.regex.Pattern;
 
 public class DSLRenderParamsAsStringsStrategy extends DSLParameterStrategy {
 
-    private final String name;
-
     public DSLRenderParamsAsStringsStrategy(PropertyDescriptor propertyDescriptor) {
         super(propertyDescriptor);
-        this.name = "";
     }
 
     public DSLRenderParamsAsStringsStrategy(int tabs, PropertyDescriptor propertyDescriptor, String name) {
         super(propertyDescriptor);
-        this.name = name;
     }
 
     @Override
