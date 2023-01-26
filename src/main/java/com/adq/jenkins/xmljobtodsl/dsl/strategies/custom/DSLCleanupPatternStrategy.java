@@ -2,7 +2,7 @@ package com.adq.jenkins.xmljobtodsl.dsl.strategies.custom;
 
 import com.adq.jenkins.xmljobtodsl.dsl.strategies.DSLObjectStrategy;
 import com.adq.jenkins.xmljobtodsl.parsers.PropertyDescriptor;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -22,16 +22,13 @@ Strategy for preBuildCleanup attribute, to correctly render includePattern and e
  "pattern" is then inserted as the value for that method
   Returns the dsl as:
    preBuildCleanup {
-			includePattern("results/*")
+			includePattern("test")
 			deleteDirectories(false)
 			cleanupParameter("test")
-			deleteCommand("test")
 		}
  */
 
 public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
-
-    private final String name;
 
     public DSLCleanupPatternStrategy(int tabs, PropertyDescriptor propertyDescriptor, String name) {
         this(tabs, propertyDescriptor, name, true);
@@ -39,48 +36,61 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
 
     public DSLCleanupPatternStrategy(int tabs, PropertyDescriptor propertyDescriptor, String name, boolean shouldInitChildren) {
         super(tabs, propertyDescriptor, name, shouldInitChildren);
-        this.name = name;
 
         List<PropertyDescriptor> children = propertyDescriptor.getProperties();
-        PropertyDescriptor parent = propertyDescriptor.getParent();
+        List<PropertyDescriptor> leftoverProps = new ArrayList<>();
+        List<PropertyDescriptor> patternProps = new ArrayList<>();
 
+        // separating the nested properties to handle later
+        for (PropertyDescriptor child : children) {
+            if (!child.getName().equals("patterns")) {
+                leftoverProps.add(child);
+            }
+            if (child.getName().equals("patterns")) {
+                patternProps.add(child);
+            }
+        }
+
+        // extracting type and pattern property descriptors
         PropertyDescriptor typeChild = null;
         PropertyDescriptor patternChild = null;
-        for (PropertyDescriptor child : children) {
-            if (child.getName().equals("type")) {
-                typeChild = child;
+        for (PropertyDescriptor prop : patternProps) {
+            if (prop.getName().equals("patterns")) {
+                for (PropertyDescriptor innerProp : prop.getProperties()) {
+                    for (PropertyDescriptor nestedProp : innerProp.getProperties()) {
+                        if (nestedProp.getName().equals("pattern")) {
+                            patternChild = nestedProp;
+                        }
+                        if (nestedProp.getName().equals("type")) {
+                            typeChild = nestedProp;
+                        }
+                    }
+                }
             }
-            if (child.getName().equals("pattern")) {
-                patternChild = child;
+        }
+
+        // create the new property descriptor and add it to the rest of the children under preBuildCleanup
+        if(!patternProps.isEmpty()) {
+            if (!typeChild.getValue().equals(null) && !patternChild.getValue().equals(null)) {
+                if (typeChild.getValue().equals("INCLUDE")) {
+                    PropertyDescriptor newChild = new PropertyDescriptor("includePattern",
+                            propertyDescriptor, patternChild.getValue());
+
+                    leftoverProps.add(0, newChild);
+                } else if (typeChild.getValue().equals("EXCLUDE")) {
+                    PropertyDescriptor newChild = new PropertyDescriptor("excludePattern",
+                            propertyDescriptor,
+                            patternChild.getValue());
+
+                    leftoverProps.add(0, newChild);
+                }
+
+                propertyDescriptor.replaceProperties(leftoverProps);
+                System.out.println(propertyDescriptor.getProperties());
+                initChildren(propertyDescriptor);
             }
         }
 
-        if (typeChild.getValue().equals("INCLUDE")) {
-            PropertyDescriptor newChild = new PropertyDescriptor("includePattern",
-                    parent.getParent(),
-                    patternChild.getValue());
-
-            parent.addProperty(newChild);
-
-        } else if (typeChild.getValue().equals("EXCLUDE")) {
-            PropertyDescriptor newChild = new PropertyDescriptor("excludePattern",
-                    parent.getParent(),
-                    patternChild.getValue());
-
-            parent.addProperty(newChild);
-        }
-    }
-
-        public String toDSL() {
-        String childrenDSL = getChildrenDSL();
-        if (!childrenDSL.isEmpty()) {
-            return "";
-        }
-
-        if (name != null) {
-            return replaceTabs(String.format(getSyntax("syntax.object_with_name"), name, childrenDSL), getTabs());
-        } else {
-            return replaceTabs(String.format(getSyntax("syntax.object"), childrenDSL), getTabs());
-        }
     }
 }
+
