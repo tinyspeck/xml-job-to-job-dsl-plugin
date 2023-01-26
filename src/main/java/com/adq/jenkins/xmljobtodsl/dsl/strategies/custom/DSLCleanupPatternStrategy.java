@@ -86,7 +86,6 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
                 }
 
                 propertyDescriptor.replaceProperties(leftoverProps);
-                System.out.println(propertyDescriptor.getProperties());
                 initChildren(propertyDescriptor);
             }
         }
