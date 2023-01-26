@@ -41,7 +41,7 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
         List<PropertyDescriptor> leftoverProps = new ArrayList<>();
         List<PropertyDescriptor> patternProps = new ArrayList<>();
 
-        // separating the nested properties to handle later
+        // separating the properties nested under patterns to handle later
         for (PropertyDescriptor child : children) {
             if (!child.getName().equals("patterns")) {
                 leftoverProps.add(child);
