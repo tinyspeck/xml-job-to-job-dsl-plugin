@@ -71,7 +71,7 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
 
         // create the new property descriptor and add it to the rest of the children under preBuildCleanup
         if(!patternProps.isEmpty()) {
-            if (!typeChild.getValue().equals(null) && !patternChild.getValue().equals(null)) {
+            if (typeChild.getValue() != null && patternChild.getValue() != null) {
                 if (typeChild.getValue().equals("INCLUDE")) {
                     PropertyDescriptor newChild = new PropertyDescriptor("includePattern",
                             propertyDescriptor, patternChild.getValue());
@@ -84,12 +84,10 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
 
                     leftoverProps.add(0, newChild);
                 }
-
-                propertyDescriptor.replaceProperties(leftoverProps);
-                initChildren(propertyDescriptor);
             }
         }
-
+        propertyDescriptor.replaceProperties(leftoverProps);
+        initChildren(propertyDescriptor);
     }
 }
 
