@@ -1,0 +1,42 @@
+name: Release new hpi
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.7
+
+      - name: Build Maven Project
+        run: mvn install -DskipTests
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release V${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload hpi asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target/xml-job-to-job-dsl.hpi
+          asset_name: xml-job-to-job-dsl.hpi
+          asset_content_type: application/octet-stream
