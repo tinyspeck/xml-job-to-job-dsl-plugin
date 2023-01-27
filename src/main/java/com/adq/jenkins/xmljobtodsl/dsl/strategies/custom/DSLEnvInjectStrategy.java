@@ -2,6 +2,7 @@ package com.adq.jenkins.xmljobtodsl.dsl.strategies.custom;
 
 import com.adq.jenkins.xmljobtodsl.dsl.strategies.DSLObjectStrategy;
 import com.adq.jenkins.xmljobtodsl.parsers.PropertyDescriptor;
+import java.util.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ public class DSLEnvInjectStrategy extends DSLObjectStrategy {
         List<PropertyDescriptor> properties = new ArrayList<>();
         properties.addAll(propertyDescriptor.getProperties());
 
-        for (HashMap.Entry<String, String> expectedProp : expectedProperties.entrySet()) {
+        for (Map.Entry<String, String> expectedProp : expectedProperties.entrySet()) {
             boolean foundProperty = false;
             int indexToRemove = 0;
 
