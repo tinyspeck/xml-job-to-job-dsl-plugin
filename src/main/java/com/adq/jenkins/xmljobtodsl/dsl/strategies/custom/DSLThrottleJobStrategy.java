@@ -6,6 +6,7 @@ import com.adq.jenkins.xmljobtodsl.parsers.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.*;
 
 /*
 throttleJobProperty is in the xml for all jobs whether or not it is being used.
@@ -46,7 +47,7 @@ public class DSLThrottleJobStrategy extends DSLObjectStrategy {
 
         boolean featureEnabled = true;
 
-        for (HashMap.Entry<String, String> expectedProp : expectedProperties.entrySet()) {
+        for (Map.Entry<String, String> expectedProp : expectedProperties.entrySet()) {
             boolean foundProperty = false;
             int indexToRemove = 0;
 
