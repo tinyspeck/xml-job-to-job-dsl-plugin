@@ -30,6 +30,9 @@ Strategy for preBuildCleanup attribute, to correctly render includePattern and e
 
 public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
 
+    PropertyDescriptor typeChild = null;
+    PropertyDescriptor patternChild = null;
+
     public DSLCleanupPatternStrategy(int tabs, PropertyDescriptor propertyDescriptor, String name) {
         this(tabs, propertyDescriptor, name, true);
     }
@@ -51,23 +54,7 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
             }
         }
 
-        // extracting type and pattern property descriptors
-        PropertyDescriptor typeChild = null;
-        PropertyDescriptor patternChild = null;
-        for (PropertyDescriptor prop : patternProps) {
-            if (prop.getName().equals("patterns")) {
-                for (PropertyDescriptor innerProp : prop.getProperties()) {
-                    for (PropertyDescriptor nestedProp : innerProp.getProperties()) {
-                        if (nestedProp.getName().equals("pattern")) {
-                            patternChild = nestedProp;
-                        }
-                        if (nestedProp.getName().equals("type")) {
-                            typeChild = nestedProp;
-                        }
-                    }
-                }
-            }
-        }
+        extractProperties(patternProps);
 
         // create the new property descriptor and add it to the rest of the children under preBuildCleanup
         if(!patternProps.isEmpty()) {
@@ -88,6 +75,24 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
         }
         propertyDescriptor.replaceProperties(leftoverProps);
         initChildren(propertyDescriptor);
+    }
+    private void extractProperties(List<PropertyDescriptor> patternProps) {
+        for (PropertyDescriptor prop : patternProps) {
+            if (prop.getName().equals("patterns")) {
+                for (PropertyDescriptor innerProp : prop.getProperties()) {
+                    for (PropertyDescriptor nestedProp : innerProp.getProperties()) {
+                        if (nestedProp.getName().equals("pattern")) {
+                            patternChild = nestedProp;
+                            System.out.println(patternChild);
+                        }
+                        if (nestedProp.getName().equals("type")) {
+                            typeChild = nestedProp;
+                            System.out.println(typeChild);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
