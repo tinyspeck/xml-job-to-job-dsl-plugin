@@ -45,7 +45,6 @@ public abstract class AbstractDSLStrategy implements DSLStrategy {
 		propertiesToBeSkipped.add("caseSensitive");
 		propertiesToBeSkipped.add("followSymlinks");
 		propertiesToBeSkipped.add("completeBuild");
-		propertiesToBeSkipped.add("externalDelete");
 		propertiesToBeSkipped.add("skipWhenFailed");
 		propertiesToBeSkipped.add("notFailBuild");
 		propertiesToBeSkipped.add("unstableReturn");
