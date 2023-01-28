@@ -33,8 +33,17 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
     PropertyDescriptor typeChild = null;
     PropertyDescriptor patternChild = null;
 
+
     public DSLCleanupPatternStrategy(int tabs, PropertyDescriptor propertyDescriptor, String name) {
         this(tabs, propertyDescriptor, name, true);
+
+        List<PropertyDescriptor> children = propertyDescriptor.getProperties();
+        List<PropertyDescriptor> leftoverProps = new ArrayList<>();
+        List<PropertyDescriptor> patternProps = new ArrayList<>();
+
+        separateProperties(children, leftoverProps, patternProps);
+        extractProperties(propertyDescriptor.getProperties());
+        processPatternProps(patternProps, leftoverProps, propertyDescriptor);
     }
 
     public DSLCleanupPatternStrategy(int tabs, PropertyDescriptor propertyDescriptor, String name, boolean shouldInitChildren) {
@@ -44,7 +53,12 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
         List<PropertyDescriptor> leftoverProps = new ArrayList<>();
         List<PropertyDescriptor> patternProps = new ArrayList<>();
 
-        // separating the properties nested under patterns to handle later
+        separateProperties(children, leftoverProps, patternProps);
+        extractProperties(patternProps);
+        processPatternProps(patternProps, leftoverProps, propertyDescriptor);
+    }
+
+    private void separateProperties(List<PropertyDescriptor> children, List<PropertyDescriptor> leftoverProps, List<PropertyDescriptor> patternProps) {
         for (PropertyDescriptor child : children) {
             if (!child.getName().equals("patterns")) {
                 leftoverProps.add(child);
@@ -53,10 +67,28 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
                 patternProps.add(child);
             }
         }
+    }
 
-        extractProperties(patternProps);
+    private void extractProperties(List<PropertyDescriptor> patternProps) {
+        for (PropertyDescriptor prop : patternProps) {
+            if (prop.getName().equals("patterns")) {
+                for (PropertyDescriptor innerProp : prop.getProperties()) {
+                    for (PropertyDescriptor nestedProp : innerProp.getProperties()) {
+                        if (nestedProp.getName().equals("pattern")) {
+                            patternChild = nestedProp;
+                            System.out.println(patternChild);
+                        }
+                        if (nestedProp.getName().equals("type")) {
+                            typeChild = nestedProp;
+                            System.out.println(typeChild);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-        // create the new property descriptor and add it to the rest of the children under preBuildCleanup
+    private void processPatternProps(List<PropertyDescriptor> patternProps, List<PropertyDescriptor> leftoverProps, PropertyDescriptor propertyDescriptor) {
         if(!patternProps.isEmpty()) {
             if (typeChild.getValue() != null && patternChild.getValue() != null) {
                 if (typeChild.getValue().equals("INCLUDE")) {
@@ -76,23 +108,6 @@ public class DSLCleanupPatternStrategy extends DSLObjectStrategy {
         propertyDescriptor.replaceProperties(leftoverProps);
         initChildren(propertyDescriptor);
     }
-    private void extractProperties(List<PropertyDescriptor> patternProps) {
-        for (PropertyDescriptor prop : patternProps) {
-            if (prop.getName().equals("patterns")) {
-                for (PropertyDescriptor innerProp : prop.getProperties()) {
-                    for (PropertyDescriptor nestedProp : innerProp.getProperties()) {
-                        if (nestedProp.getName().equals("pattern")) {
-                            patternChild = nestedProp;
-                            System.out.println(patternChild);
-                        }
-                        if (nestedProp.getName().equals("type")) {
-                            typeChild = nestedProp;
-                            System.out.println(typeChild);
-                        }
-                    }
-                }
-            }
-        }
-    }
+
 }
 
